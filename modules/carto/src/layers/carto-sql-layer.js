@@ -10,8 +10,16 @@ const defaultProps = {
 
 export default class CartoSQLLayer extends CartoLayer {
   async _updateTileJSON() {
-    const tilejson = await getMapTileJSON(this.props);
-    this.setState({tilejson});
+    try {
+      const tilejson = await getMapTileJSON(this.props);
+      this.setState({tilejson});
+    } catch (err) {
+      if (typeof this.props.onError === 'function') {
+        this.props.onError(err);
+      } else {
+        console.error(err);
+      }
+    }
   }
 }
 
